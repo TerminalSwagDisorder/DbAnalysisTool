@@ -62,6 +62,7 @@ def main():
 		fig_nb = None
 		fig_tb = None
 		fig_line = None
+		fig_tp = None
 
 		print("number_column_data", len(number_column_data))
 		print(number_column_data)
@@ -80,8 +81,7 @@ def main():
 			if fig_nb is not None:
 				plt_nb_name = plt_nb_name.replace(":", "_").replace("/", "_").replace("\\", "_")
 				nb_file_name = f"{plt_nb_name}.png"
-				fig_nb.savefig(imgDirPath / nb_file_name)
-				plt.clf()
+				fig_nb.savefig(imgDirPath / nb_file_name, dpi=200)
 				plt.close(fig_nb)
 
 				print("Barchart")
@@ -90,8 +90,7 @@ def main():
 			if fig_tb is not None:
 				plt_tb_name = plt_tb_name.replace(":", "_").replace("/", "_").replace("\\", "_")
 				tb_file_name = f"{plt_tb_name}.png"
-				fig_tb.savefig(imgDirPath / tb_file_name)
-				plt.clf()
+				fig_tb.savefig(imgDirPath / tb_file_name, dpi=200)
 				plt.close(fig_tb)
 
 				print("Barchart")
@@ -100,8 +99,7 @@ def main():
 			if fig_line is not None:
 				plt_line_name = plt_line_name.replace(":", "_").replace("/", "_").replace("\\", "_")
 				line_file_name = f"{plt_line_name}.png"
-				fig_line.savefig(imgDirPath / line_file_name)
-				plt.clf()
+				fig_line.savefig(imgDirPath / line_file_name, dpi=200)
 				plt.close(fig_line)
 
 				print("Linechart")
@@ -110,73 +108,24 @@ def main():
 			if fig_tp is not None:
 				plt_tp_name = plt_tp_name.replace(":", "_").replace("/", "_").replace("\\", "_")
 				tp_file_name = f"{plt_tp_name}.png"
-				fig_tp.savefig(imgDirPath / tp_file_name)
-				plt.clf()
+				fig_tp.savefig(imgDirPath / tp_file_name, dpi=200)
 				plt.close(fig_tp)
 
 				print("Piechart")
 				sleep(0.1)
+				
+			plt.clf()
 
 		except Exception as e:
 			print(f"Something went wrong: {e}")
 			sleep(0.5)
-
-	'''
-		if fig_nb is not None:
-			try:
-				plt_nb_name = plt_nb_name.replace(":", "_").replace("/", "_").replace("\\", "_")
-				nb_file_name = f"{plt_nb_name}.png"
-				fig_nb.savefig(imgDirPath / nb_file_name)
-				plt.clf()
-				plt.close(fig_nb)
-
-				print("Barchart")
-				sleep(0.1)
-
-			except Exception as e:
-				print(f"Something went wrong: {e}")
-				sleep(0.5)
-
-		if fig_tb is not None:
-			try:
-				plt_tb_name = plt_tb_name.replace(":", "_").replace("/", "_").replace("\\", "_")
-				tb_file_name = f"{plt_tb_name}.png"
-				fig_tb.savefig(imgDirPath / tb_file_name)
-				plt.clf()
-				plt.close(fig_tb)
-
-				print("Barchart")
-				sleep(0.1)
-
-			except Exception as e:
-				print(f"Something went wrong: {e}")
-				sleep(0.5)
-
-		if fig_line is not None:
-			try:
-				plt_line_name = plt_line_name.replace(":", "_").replace("/", "_").replace("\\", "_")
-				line_file_name = f"{plt_line_name}.png"
-				fig_line.savefig(imgDirPath / line_file_name)
-				plt.clf()
-				plt.close(fig_line)
-
-				print("Linechart")
-				#sleep(0.1)
-
-			except Exception as e:
-				print(f"Something went wrong: {e}")
-				sleep(0.5)
-
-	'''
-
-
 
 	# Close the database connection
 	conn.close()
 
 def number_averages(number_column_data, query):
 	# Reset the plot for every run
-	fig, ax = plt.subplots()
+	fig, ax = plt.subplots(figsize=(13, 10))
 
 	try:
 		# Calculate the average of the column
@@ -207,7 +156,7 @@ def number_averages(number_column_data, query):
 
 def number_linecharts(number_column_data, query):
 	# Reset the plot for every run
-	fig, ax = plt.subplots()
+	fig, ax = plt.subplots(figsize=(13, 10))
 
 	try:
 		# Round the y axis to the nearest tenths
@@ -218,7 +167,6 @@ def number_linecharts(number_column_data, query):
 
 		# Create a line chart
 		ax.plot(number_column_data, label = "Data Trend", color = "blue", marker = "o", linestyle = "-")
-		#plt.plot(range(len(number_column_data)), number_column_data, label="Data Points", marker="o", linestyle="-")
 
 		ax.set_xlabel("Data Points")
 		ax.set_ylabel("Values")
@@ -239,7 +187,7 @@ def number_linecharts(number_column_data, query):
 
 def text_barcharts(text_column_data, query):
 	# Reset the plot for every run
-	fig, ax = plt.subplots()
+	fig, ax = plt.subplots(figsize=(13, 10))
 
 	# Calculate the amount of x
 	try:
@@ -303,23 +251,21 @@ def text_barcharts(text_column_data, query):
 		print(e)
 		return None, None
 
-def text_piecharts(text_column_data, query):
+def text_piecharts(text_column_data, query):	
 	# Reset the plot for every run
-	fig, ax = plt.subplots()
+	fig, ax = plt.subplots(figsize=(13, 10))
+	
 	try:
-		# Count the frequency of each unique item in text_column_data
+		# Count each unique item
 		data_count = Counter(text_column_data)
 
 		# Prepare data for the pie chart
-		labels = data_count.keys()
-		sizes = data_count.values()
+		labels = list(data_count.keys())
+		sizes = list(data_count.values())
 
-		# Create a pie chart
 		ax.pie(sizes, labels=labels, autopct="%1.1f%%", startangle=140)
-		
 		# Equal aspect ratio ensures the pie chart is circular.
 		ax.axis("equal")
-
 		plt_name = f"piechart_of_{query}"
 		ax.set_title(plt_name)
 
@@ -327,8 +273,9 @@ def text_piecharts(text_column_data, query):
 		return fig, plt_name
 
 	except Exception as e:
-		print(f"An error occurred: {e}")
 		plt.close(fig)
+		plt.clf()
+		print(e)
 		return None, None
 
 
