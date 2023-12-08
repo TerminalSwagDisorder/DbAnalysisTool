@@ -1,13 +1,12 @@
 import sqlite3
 import matplotlib.pyplot as plt
-from pathlib import Path
 import math
+from pathlib import Path
 from collections import Counter
 from time import sleep as sleep
 
 
 def main():
-
 	dirPath = Path(__file__).resolve().parent
 	imgDirPath = create_image_folder(dirPath)
 
@@ -122,6 +121,7 @@ def main():
 
 	# Close the database connection
 	conn.close()
+	print("Program ran successfully")
 
 def number_averages(number_column_data, query):
 	# Reset the plot for every run
@@ -238,12 +238,6 @@ def text_barcharts(text_column_data, query):
 
 			print("Misc text barchart created")
 			return fig, plt_name
-		'''
-		else:
-			plt.close(fig)
-			plt.clf()
-			return None, None
-		'''
 
 	except Exception as e:
 		plt.close(fig)
