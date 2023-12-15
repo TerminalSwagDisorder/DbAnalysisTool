@@ -1,3 +1,7 @@
+# File name: analysis.py
+# Auth: Benjamin Willför/TerminalSwagDisorder
+# Desc: File for analyzing sqlite databases
+
 import sqlite3
 import matplotlib.pyplot as plt
 import math
@@ -7,6 +11,7 @@ from time import sleep as sleep
 
 
 def main():
+	# Get location of file and create image folder
 	dirPath = Path(__file__).resolve().parent
 	imgDirPath = create_image_folder(dirPath)
 
@@ -14,13 +19,17 @@ def main():
 	conn = sqlite3.connect("datu_sqlite_analysis_proper_format.db")
 	cursor = conn.cursor()
 
+	# If imported from csv, then the tablename should be the name of the csv file
+	# If you want multiple tables, make table_name a list with them and loop through them
 	table_name = "datu_collection_30112023_unedited_utf8"
 
 	# Get all column names
 	cursor.execute(f"PRAGMA table_info({table_name})")
 	columns = cursor.fetchall()
 	select_query = [column[1] for column in columns]
-
+	
+	
+	# Should be able to move everything down from here out of main, possible function name is full_analysis
 	# Get the data
 	for query in select_query:
 		print(f"Current column: {query}")
@@ -57,7 +66,8 @@ def main():
 				except ValueError:
 					# If conversion to float fails, treat it as text
 					text_column_data.append(value)
-
+					
+		# Initialize empty variables
 		fig_nb = None
 		fig_tb = None
 		fig_line = None
@@ -76,6 +86,8 @@ def main():
 		if len(text_column_data) > 0:
 			fig_tb, plt_tb_name = text_barcharts(text_column_data, query)
 			fig_tp, plt_tp_name = text_piecharts(text_column_data, query)
+			
+		# Create appropriate files
 		try:
 			if fig_nb is not None:
 				plt_nb_name = plt_nb_name.replace(":", "_").replace("/", "_").replace("\\", "_")
